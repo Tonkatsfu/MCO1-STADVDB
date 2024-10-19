@@ -1,12 +1,12 @@
 CREATE TABLE dim_game (
-    app_id INT PRIMARY KEY AUTO_INCREMENT,
+    app_id INT PRIMARY KEY,
     name VARCHAR(255),
     release_date DATE,
     required_age INT,
     genres VARCHAR(255),
     categories VARCHAR(255),
     tags TEXT,
-    about_the_game TEXT,
+    about_the_game LONGTEXT,
     header_image TEXT,
     website TEXT,
     support_url TEXT,
@@ -15,3 +15,5 @@ CREATE TABLE dim_game (
     recommendations TEXT,
     notes TEXT
 );
+
+
