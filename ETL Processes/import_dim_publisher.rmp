@@ -13,7 +13,7 @@
     <parameter key="encoding" value="SYSTEM"/>
     <process expanded="true">
       <operator activated="true" class="read_csv" compatibility="10.5.000" expanded="true" height="68" name="Read CSV" width="90" x="313" y="187">
-        <parameter key="csv_file" value="C:/Users/Joemar/Documents/CCS Junior Year Term 1/STADVDB/MCO1-FINAL/MCO1-STADVDB/CSV Files/games_cleaned.csv"/>
+        <parameter key="csv_file" value="C:/Users/Admin/Downloads/games_cleaned.csv"/>
         <parameter key="column_separators" value=","/>
         <parameter key="trim_lines" value="false"/>
         <parameter key="multiline_text" value="false"/>
