@@ -31,10 +31,7 @@ def get_age_category_filter(age_filter):
 
     return " OR ".join(age_conditions)
 
-def fetch_games_highest_peak_ccu(included_categories, excluded_categories, top_n, age_fil):
-    include_query = " OR ".join([f"g.categories LIKE '%{category}%'" for category in included_categories])
-    exclude_query = " AND ".join([f"g.categories NOT LIKE '%{category}%'" for category in excluded_categories])
-
+def fetch_games_highest_peak_ccu(selected_category, top_n, age_fil):
     query = f"""
     SELECT 
         g.name, 
@@ -44,11 +41,9 @@ def fetch_games_highest_peak_ccu(included_categories, excluded_categories, top_n
     JOIN 
         fact_sales f ON g.`AppID` = f.`AppID`
     WHERE 
-        ({include_query})
+        FIND_IN_SET('{selected_category}', g.`Categories`) > 0
     """
 
-    if exclude_query:
-        query += f" AND ({exclude_query})"
 
     if age_fil:
         query += f" AND ({age_fil})"
@@ -78,10 +73,7 @@ def fetch_games_highest_peak_ccu(included_categories, excluded_categories, top_n
 
     return highest_ccu, fig
 
-def fetch_games_highest_playtime(included_categories, excluded_categories, top_n, age_fil):
-    include_query = " OR ".join([f"g.categories LIKE '%{category}%'" for category in included_categories])
-    exclude_query = " AND ".join([f"g.categories NOT LIKE '%{category}%'" for category in excluded_categories])
-
+def fetch_games_highest_playtime(selected_category, top_n, age_fil):
     query = f"""
     SELECT 
         g.name, 
@@ -92,11 +84,8 @@ def fetch_games_highest_playtime(included_categories, excluded_categories, top_n
     JOIN 
         fact_sales f ON g.`AppID` = f.`AppID`
     WHERE 
-        ({include_query})
+        FIND_IN_SET('{selected_category}', g.`Categories`) > 0
     """
-
-    if exclude_query:
-        query += f" AND ({exclude_query})"
 
     if age_fil:
         query += f" AND ({age_fil})"
