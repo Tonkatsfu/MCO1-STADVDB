@@ -15,8 +15,8 @@ def create_connection():
         host="localhost",   
         port=3306,                    
         user="root",             
-        password="Arabella20",     
-        database="warehouse"     
+        password="kian0204",     
+        database="databasewarehouse"     
     )
 
 def get_age_category_filter(age_filter):
