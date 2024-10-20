@@ -4,13 +4,19 @@ import pandas as pd
 import plotly.express as px
 from mysql.connector import Error
 
+# To connect to the server correcly fill up all information under create_connection which are : 
+# host
+# port
+# user
+# password
+# database
 def create_connection():
     return mysql.connector.connect(
         host="localhost",   
         port=3306,                    
         user="root",             
-        password="123456",     
-        database="mco1"     
+        password="Arabella20",     
+        database="warehouse"     
     )
 
 def get_age_category_filter(age_filter):
