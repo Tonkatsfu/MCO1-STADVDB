@@ -27,20 +27,30 @@ included_genres = st.sidebar.multiselect("Select Genres to Include", genres)
 temp_genres = [genre for genre in genres if genre not in included_genres]
 excluded_genres = st.sidebar.multiselect("Select Genres to Exclude", temp_genres)
 
+age_categories = st.sidebar.multiselect(
+    "Select Age Categories",
+    options=["0-7 (Children)", "8-15 (Teens)", "16-21 (Young Adults)"]
+)
+
+age_filter = functions.get_age_category_filter(age_categories)
+
 connection = None
 
 try:
     connection = functions.create_connection()
     if connection.is_connected():
         if included_genres:
+
+            #Data checks
             game_data, fig = functions.fetch_games_highest_peak_ccu_by_genre(
                 included_genres, 
                 excluded_genres, 
-                5
+                5,
+                age_filter
             )
 
-            if not game_data.empty:  # Check if the DataFrame is empty
-                col1, col2 = st.columns([1, 3])  # Adjust the width ratios as needed
+            if not game_data.empty: 
+                col1, col2 = st.columns([1, 3])  
 
                 with col1:
                     top_n = st.slider(
@@ -55,13 +65,13 @@ try:
                 game_data, fig = functions.fetch_games_highest_peak_ccu_by_genre(
                     included_genres, 
                     excluded_genres, 
-                    top_n
+                    top_n,
+                    age_filter
                 )
 
-                # Display the bar graph
-                st.plotly_chart(fig)  # Display the figure
+                st.plotly_chart(fig)  
             else:
-                st.write("No games found for the selected genres.")
+                st.write("No games found.")
 
 except Error as e:
     st.error(f"Error while connecting to MySQL: {e}")

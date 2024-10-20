@@ -13,7 +13,19 @@ def create_connection():
         database="mco1"     
     )
 
-def fetch_games_highest_peak_ccu_by_genre(included_genres, excluded_genres, top_n):
+def get_age_category_filter(selected_categories):
+    age_conditions = []
+    
+    if "0-7 (Children)" in selected_categories:
+        age_conditions.append("`Required Age` BETWEEN 0 AND 7")
+    if "8-15 (Teens)" in selected_categories:
+        age_conditions.append("`Required Age` BETWEEN 8 AND 15")
+    if "16-21 (Young Adults)" in selected_categories:
+        age_conditions.append("`Required Age` BETWEEN 16 AND 21")
+
+    return " OR ".join(age_conditions)
+
+def fetch_games_highest_peak_ccu_by_genre(included_genres, excluded_genres, top_n, age_fil):
     include_query = " OR ".join([f"g.genres LIKE '%{genre}%'" for genre in included_genres])
     exclude_query = " AND ".join([f"g.genres NOT LIKE '%{genre}%'" for genre in excluded_genres])
 
@@ -31,6 +43,9 @@ def fetch_games_highest_peak_ccu_by_genre(included_genres, excluded_genres, top_
 
     if exclude_query:
         query += f" AND ({exclude_query})"
+
+    if age_fil:
+        query += f" AND ({age_fil})"
 
     query += """
     GROUP BY 
