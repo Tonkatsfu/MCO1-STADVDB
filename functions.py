@@ -1,6 +1,8 @@
 # MySQL connection setup
+
 import mysql.connector
 import pandas as pd
+import streamlit as st
 import plotly.express as px
 from mysql.connector import Error
 
@@ -15,8 +17,8 @@ def create_connection():
         host="localhost",   
         port=3306,                    
         user="root",             
-        password="Arabella20",     
-        database="warehouse"     
+        password="123456",     
+        database="mco1"     
     )
 
 def get_age_category_filter(age_filter):
@@ -30,6 +32,24 @@ def get_age_category_filter(age_filter):
         age_conditions.append("`Required Age` BETWEEN 16 AND 21")
 
     return " OR ".join(age_conditions)
+
+def display_game_data(fetch_function, category, slider_label, default_value, age_filter):
+    data, fig = fetch_function(category, default_value, age_filter)
+
+    if not data.empty:
+        # Slider for the number of games to display
+        top_n = st.slider(
+            f"Number of games to display by {slider_label}:",
+            min_value=5,
+            max_value=20,
+            value=5,  
+            step=1    
+        )
+
+        data, fig = fetch_function(category, top_n, age_filter)
+        st.plotly_chart(fig)  
+    else:
+        st.write("No games found.")
 
 def fetch_games_highest_peak_ccu(selected_category, top_n, age_fil):
     query = f"""

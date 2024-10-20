@@ -1,11 +1,3 @@
-# # Update from given tags
-# tags = ["Action", "Adventure", "Strategy", "RPG", "Sports", "Simulation", "Indie"]
-
-
-# included_tags = st.sidebar.multiselect("Select Tags to Include", tags)
-# temp_tags = [tag for tag in tags if tag not in included_tags]
-# excluded_tags = st.sidebar.multiselect("Select Tags to Exclude", temp_tags)
-
 import streamlit as st
 import mysql.connector
 import pandas as pd
@@ -13,16 +5,12 @@ import plotly.express as px
 from mysql.connector import Error
 import warnings
 import os
-import functions #functions
-
+import functions 
 
 warnings.filterwarnings('ignore')
 
 # Title
 st.title(":pencil: Steam Games Report")
-
-categories = ["Single-player", "Multi-player"]
-#selected_category = st.sidebar.radio("Gamemode", options=categories)
 
 age_categories = st.sidebar.multiselect(
     "Select Age Categories",
@@ -43,48 +31,23 @@ try:
         selected_category = st.sidebar.radio("Gamemode", options=categories)
 
         if selected_category:
-            game_data, fig = functions.fetch_games_highest_peak_ccu(
+            functions.display_game_data(
+                functions.fetch_games_highest_peak_ccu,
                 selected_category,
+                "Highest Peak CCU",
                 5,
                 age_filter
             )
 
-            if not game_data.empty: 
-                top_n_ccu = st.slider(
-                    "Number of games to display by Highest Peak CCU:",
-                    min_value=5,
-                    max_value=20,
-                    value=5,  
-                    step=1    
-                )
+            # Fetch and display Highest Average Playtime
+            functions.display_game_data(
+                functions.fetch_games_highest_playtime,
+                selected_category,
+                "Highest Average and Median Playtime of All Time",
+                5,
+                age_filter
+            )
 
-                highest_ccu, fig = functions.fetch_games_highest_peak_ccu(
-                    selected_category,
-                    top_n_ccu,
-                    age_filter
-                )
-
-                st.plotly_chart(fig)  
-
-                top_n_playtime = st.slider(
-                    "Number of games to display by Highest Playtime:",
-                    min_value=5,
-                    max_value=20,
-                    value=5,  
-                    step=1    
-                )
-
-                # Fetch highest average playtime data based on user input
-                highest_ave_playtime, fig = functions.fetch_games_highest_playtime(
-                    selected_category, 
-                    top_n_playtime,
-                    age_filter
-                )
-
-                # Display Playtime chart
-                st.plotly_chart(fig)
-            else:
-                st.write("No games found.")
 except Error as e:
     st.error(f"Error while connecting to MySQL: {e}")
 finally:
