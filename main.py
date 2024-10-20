@@ -20,12 +20,12 @@ warnings.filterwarnings('ignore')
 
 # Title
 st.title(":pencil: Steam Games Report")
-genres = ["Single-player", "Multi-player", "Full controller support"]
+categories = ["Single-player", "Multi-player", "Full controller support"]
 
-# Sidebar input for included genres
-included_genres = st.sidebar.multiselect("Select Genres to Include", genres)
-temp_genres = [genre for genre in genres if genre not in included_genres]
-excluded_genres = st.sidebar.multiselect("Select Genres to Exclude", temp_genres)
+# Sidebar input for included categories
+included_categories = st.sidebar.multiselect("Select Categories to Include", categories)
+temp_categories = [category for category in categories if category not in included_categories]
+excluded_categories = st.sidebar.multiselect("Select Categories to Exclude", temp_categories)
 
 age_categories = st.sidebar.multiselect(
     "Select Age Categories",
@@ -39,37 +39,53 @@ connection = None
 try:
     connection = functions.create_connection()
     if connection.is_connected():
-        if included_genres:
+        if included_categories:
 
             #Data checks
-            game_data, fig = functions.fetch_games_highest_peak_ccu_by_genre(
-                included_genres, 
-                excluded_genres, 
+            game_data, fig = functions.fetch_games_highest_peak_ccu(
+                included_categories, 
+                excluded_categories, 
                 5,
                 age_filter
             )
 
             if not game_data.empty: 
-                col1, col2 = st.columns([1, 3])  
 
-                with col1:
-                    top_n = st.slider(
-                        "Select number of top games to display:",
-                        min_value=5,
-                        max_value=50,
-                        value=5,  
-                        step=1    
+                top_n_ccu = st.slider(
+                    "Number of games to display by Highest Peak CCU:",
+                    min_value=5,
+                    max_value=20,
+                    value=5,  
+                    step=1    
+                )
+
+                highest_ccu, fig = functions.fetch_games_highest_peak_ccu(
+                    included_categories, 
+                    excluded_categories, 
+                    top_n_ccu,
+                    age_filter
                     )
 
-                # Fetch the data for the selected number of top games
-                game_data, fig = functions.fetch_games_highest_peak_ccu_by_genre(
-                    included_genres, 
-                    excluded_genres, 
-                    top_n,
+                st.plotly_chart(fig)  
+
+                top_n_playtime = st.slider(
+                    "Number of games to display by Highest Playtime",
+                    min_value=5,
+                    max_value=20,
+                    value=5,  
+                    step=1    
+                )
+
+                highest_ave_playtime, fig = functions.fetch_games_highest_playtime(
+                    included_categories,
+                    excluded_categories,
+                    top_n_playtime,
                     age_filter
                 )
 
-                st.plotly_chart(fig)  
+                st.plotly_chart(fig)
+
+                
             else:
                 st.write("No games found.")
 
