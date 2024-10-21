@@ -4,7 +4,22 @@ import warnings
 import plotly.express as px  # Import Plotly Express here
 from mysql.connector import Error  # Import Error class
 
+<<<<<<< Updated upstream
 warnings.filterwarnings('ignore')
+=======
+import sys
+
+sys.path.append('Functions')
+sys.path.append('Views')
+
+#Helper functions
+import Functions.helperFunctions as hf
+
+#Different views
+import Views.ViewByGames as viewGames
+import Views.ViewTwoGames as compareGames
+import Views.ViewByGenres as viewGenres
+>>>>>>> Stashed changes
 
 # Title
 st.title(":pencil: Steam Games Report")
@@ -51,6 +66,7 @@ try:
             )
             st.plotly_chart(fig_ccu)  
 
+<<<<<<< Updated upstream
             # Fetch highest average playtime data based on user input
             top_n_playtime = st.slider(
                 "Number of games to display by Highest Playtime:",
@@ -66,6 +82,18 @@ try:
             )
             # Display Playtime chart
             st.plotly_chart(fig_playtime)
+=======
+        selected_view = st.sidebar.selectbox("Choose a view:", options=view_options)
+
+        view_actions = {
+            "View by Games": viewGames.display_game_reports,
+            "Compare two games": compareGames.compare_two_games,
+            "View by Publisher": viewGenres.display_genre_reports
+        }
+
+        if selected_view in view_actions:
+            view_actions[selected_view]()
+>>>>>>> Stashed changes
 
             # Fetch total games by publisher
             if selected_genre:
