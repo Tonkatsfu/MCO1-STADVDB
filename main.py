@@ -16,6 +16,7 @@ import Functions.helperFunctions as hf
 #Different views
 import Views.ViewByGames as viewGames
 import Views.ViewTwoGames as compareGames
+import Views.ViewByGenres as viewGenres
 
 # Title
 st.title(":pencil: Steam Games Report")
@@ -39,7 +40,8 @@ try:
 
         view_actions = {
             "View by Games": viewGames.display_game_reports,
-            "Compare two games": compareGames.compare_two_games
+            "Compare two games": compareGames.compare_two_games,
+            "View by Publisher": viewGenres.display_genre_reports
         }
 
         if selected_view in view_actions:
