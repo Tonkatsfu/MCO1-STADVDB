@@ -1,5 +1,5 @@
 import streamlit as st
-import Functions.gameFunctions as gameFunctions
+import Functions.gameFunctions as gf
 
 def display_game_reports():
     # Radio button for selecting game mode
@@ -11,12 +11,12 @@ def display_game_reports():
         options=["0-7 (Children)", "8-15 (Teens)", "16-21 (Young Adults)"]
     )
 
-    age_filter = gameFunctions.get_age_category_filter(age_categories)
+    age_filter = gf.get_age_category_filter(age_categories)
 
     if selected_category:
         # Display Highest Peak CCU
-        gameFunctions.display_game_data(
-            gameFunctions.fetch_games_highest_peak_ccu,
+        gf.display_game_data(
+            gf.fetch_games_highest_peak_ccu,
             selected_category,
             "Highest Peak CCU",
             5,
@@ -24,8 +24,8 @@ def display_game_reports():
         )
 
         # Display Highest Average Playtime
-        gameFunctions.display_game_data(
-            gameFunctions.fetch_games_highest_playtime,
+        gf.display_game_data(
+            gf.fetch_games_highest_playtime,
             selected_category,
             "Highest Average and Median Playtime of All Time",
             5,

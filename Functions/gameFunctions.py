@@ -1,25 +1,10 @@
-# MySQL connection setup
-
 import mysql.connector
 import pandas as pd
 import streamlit as st
 import plotly.express as px
-from mysql.connector import Error
+#from mysql.connector import Error
 
-# To connect to the server correcly fill up all information under create_connection which are : 
-# host
-# port
-# user
-# password
-# database
-def create_connection():
-    return mysql.connector.connect(
-        host="localhost",   
-        port=3306,                    
-        user="root",             
-        password="123456",     
-        database="mco1"     
-    )
+import helperFunctions as hf
 
 def get_age_category_filter(age_filter):
     age_conditions = []
@@ -75,20 +60,13 @@ def fetch_games_highest_peak_ccu(selected_category, top_n, age_fil):
         highest_peak_ccu DESC;
     """
 
-    #Execute query
-    conn = create_connection()
-    cursor = conn.cursor()
-    cursor.execute(query)
-    result = cursor.fetchall()
-    conn.close()
+    result = hf.execute_query(query)
 
     # Change to something else (maybe bar graph)
     df = pd.DataFrame(result, columns=['Game Name', 'Highest Peak CCU'])
 
     df['Highest Peak CCU'] = pd.to_numeric(df['Highest Peak CCU'], errors='coerce')
-
     highest_ccu = df.nlargest(top_n, 'Highest Peak CCU')
-
     fig = px.bar(highest_ccu, x='Game Name', y='Highest Peak CCU', title=f'Top {top_n} Games by Highest Peak CCU')
 
     return highest_ccu, fig
@@ -117,12 +95,7 @@ def fetch_games_highest_playtime(selected_category, top_n, age_fil):
         average_playtime DESC;
     """
 
-    # Execute query
-    conn = create_connection()
-    cursor = conn.cursor()
-    cursor.execute(query)
-    result = cursor.fetchall()
-    conn.close()
+    result = hf.execute_query(query)
 
     # Convert the result to a DataFrame for display in Streamlit
     df = pd.DataFrame(result, columns=['Game Name', 'Average Playtime', 'Median Playtime'])
