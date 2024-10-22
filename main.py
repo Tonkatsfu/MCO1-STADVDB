@@ -31,7 +31,6 @@ try:
         view_options = [
             "View by Games",
             "View by Publisher",
-            "View by Developer",
             "View by Ratings",
             "Compare two games"
         ]
