@@ -20,3 +20,6 @@ def compare_two_games():
 
         fig = tg.compare_ccu(game_one, game_two)
         st.plotly_chart(fig) 
+
+        fig = tg.compare_price(game_one, game_two)
+        st.plotly_chart(fig) 

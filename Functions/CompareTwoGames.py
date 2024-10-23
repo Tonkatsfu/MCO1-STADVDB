@@ -55,6 +55,29 @@ def fetch_game_ccu(game_name):
         return result[0][0]  
     else:
         return 0
+    
+def fetch_game_price(game_name):
+    query = f"""
+    SELECT 
+        `Price`
+    FROM
+        fact_sales
+    WHERE
+        `AppID` = (
+        SELECT
+            `AppID`
+        FROM
+            dim_game
+        WHERE
+            `Name` = '{game_name}'
+        )
+    """
+    result = hf.execute_query(query)
+
+    if result and len(result) > 0:
+        return result[0][0] 
+    else:
+        return 0
 
 def compare_reviews(game_one, game_two):
 
@@ -116,6 +139,33 @@ def compare_ccu(game_one, game_two):
         title='Comparison of Peak Concurrent Users (CCU)',
         xaxis_title='Games',
         yaxis_title='Peak CCU',
+        barmode='group', 
+    )
+
+    return fig
+
+def compare_price(game_one, game_two):
+    price_one = fetch_game_price(game_one)
+    price_two = fetch_game_price(game_two)
+
+    data = {
+        'Games': [game_one, game_two],
+        'Game Price': [price_one, price_two]
+    }
+
+    df = pd.DataFrame(data)
+    fig = go.Figure()
+
+    fig.add_trace(go.Bar(
+        x=df['Games'],
+        y=df['Game Price'],
+        marker_color=['#1f77b4', '#ff7f0e'], 
+    ))
+
+    fig.update_layout(
+        title='Comparison of Game Prices',
+        xaxis_title='Games',
+        yaxis_title='Game Price',
         barmode='group', 
     )
 

@@ -1,7 +1,7 @@
 import streamlit as st
 import Functions.downloadsByGenres as gf
 import plotly.express as px 
-from mysql.connector import Error 
+import pandas as pd
 
 def display_genre_reports():
     st.sidebar.title("Select a Genre")
@@ -32,4 +32,19 @@ def display_genre_reports():
         else:
             st.write(f"No games found for the selected genre: {selected_genre}")
 
-display_genre_reports()
+        top_n_publishers_recommendations = st.slider(
+            "Number of Recommendations per Publishers:",
+            min_value=1,
+            max_value=20, 
+            value=5,
+            step=1
+        )
+
+        total_recommendations_by_publisher = gf.fetch_total_recommendations_by_publisher(selected_genre, top_n_publishers_recommendations)
+
+        if not total_recommendations_by_publisher.empty:
+            fig_recommendations = px.bar(total_recommendations_by_publisher, x='Publisher', y='Total Recommendations', title='Total Recommendations by Publisher')
+            st.plotly_chart(fig_recommendations)
+        else:
+            st.write(f"No recommendations found for the selected genre: {selected_genre}")
+

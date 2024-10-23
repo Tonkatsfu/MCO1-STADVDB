@@ -1,10 +1,5 @@
 import mysql.connector
 import pandas as pd
-import streamlit as st
-import plotly.graph_objects as go
-import plotly.express as px
-from mysql.connector import Error
-
 import helperFunctions as hf
 
 def fetch_publishers():
@@ -71,4 +66,31 @@ def fetch_total_games_by_publisher(selected_genre, top_n_publishers, roll_up=Fal
     conn.close()
 
     df = pd.DataFrame(result, columns=['Publisher', 'Total Games'])
+    return df
+
+def fetch_total_recommendations_by_publisher(selected_genre, top_n_publishers):
+    query = f"""
+    SELECT 
+        p.`Publishers` AS `Publisher`, 
+        SUM(g.`Recommendations`) AS `Total Recommendations`
+    FROM 
+        dim_game g
+    JOIN 
+        dim_publisher p ON g.`AppID` = p.`AppID`
+    WHERE 
+        g.`Genres` = '{selected_genre}'
+    GROUP BY 
+        p.`Publishers`
+    ORDER BY 
+        `Total Recommendations` DESC
+    LIMIT {top_n_publishers};
+    """
+
+    conn = hf.create_connection()
+    cursor = conn.cursor()
+    cursor.execute(query)
+    result = cursor.fetchall()
+    conn.close()
+
+    df = pd.DataFrame(result, columns=['Publisher', 'Total Recommendations'])
     return df
