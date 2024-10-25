@@ -165,7 +165,7 @@ def compare_price(game_one, game_two):
     fig.update_layout(
         title='Comparison of Game Prices',
         xaxis_title='Games',
-        yaxis_title='Game Price',
+        yaxis_title='Game Price (in Dollars $)',
         barmode='group', 
     )
 
