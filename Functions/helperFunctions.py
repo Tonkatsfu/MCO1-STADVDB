@@ -12,8 +12,8 @@ def create_connection():
         host="localhost",   
         port=3306,                    
         user="root",             
-        password="kian0204",     
-        database="databasewarehouse"     
+        password="123456",     
+        database="mco1"     
     )
 
 def execute_query(query):
