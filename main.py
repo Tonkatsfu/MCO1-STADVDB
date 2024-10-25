@@ -29,18 +29,17 @@ try:
         #Different view options
         st.sidebar.title("Select View")
         view_options = [
-            "View by Games",
-            "View by Publisher",
-            "View by Ratings",
+            "General",
+            "Publisher",
             "Compare two games"
         ]
 
         selected_view = st.sidebar.selectbox("Choose a view:", options=view_options)
 
         view_actions = {
-            "View by Games": viewGames.display_game_reports,
+            "General": viewGames.display_game_reports,
+            "Publisher": viewGenres.display_genre_reports,
             "Compare two games": compareGames.compare_two_games,
-            "View by Publisher": viewGenres.display_genre_reports
         }
 
         if selected_view in view_actions:
