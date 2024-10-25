@@ -11,7 +11,6 @@ CREATE TABLE fact_sales (
     average_playtime_two_weeks INT,
     median_playtime_forever INT,
     median_playtime_two_weeks INT,
-    time_id INT,
-    FOREIGN KEY (app_id) REFERENCES dim_game(app_id) ON DELETE CASCADE,
-    FOREIGN KEY (time_id) REFERENCES dim_time(time_id) ON DELETE CASCADE
+    release_date DATE,
+    FOREIGN KEY (app_id) REFERENCES dim_game(app_id) ON DELETE CASCADE
 );

@@ -43,7 +43,6 @@
       <operator activated="true" class="blending:generate_columns" compatibility="10.5.000" expanded="true" height="82" name="Generate Attributes" width="90" x="447" y="289">
         <list key="function_descriptions">
           <parameter key="sales_id" value="row_number()"/>
-          <parameter key="time_id" value="row_number()"/>
         </list>
         <parameter key="keep_all_columns" value="true"/>
         <parameter key="default_time_zone" value="Asia/Shanghai"/>
@@ -52,7 +51,7 @@
         <parameter key="type" value="include attributes"/>
         <parameter key="attribute_filter_type" value="a subset"/>
         <parameter key="select_attribute" value=""/>
-        <parameter key="select_subset" value="AppID␞Average playtime forever␞Average playtime two weeks␞Estimated owners␞Median playtime forever␞Median playtime two weeks␞Negative␞Peak CCU␞Positive␞Price␞Release date␞sales_id␞Score rank␞time_id"/>
+        <parameter key="select_subset" value="AppID␞Average playtime forever␞Average playtime two weeks␞Estimated owners␞Median playtime forever␞Median playtime two weeks␞Negative␞Peak CCU␞Positive␞Price␞Release date␞sales_id␞Score rank"/>
         <parameter key="also_apply_to_special_attributes_(id,_label..)" value="false"/>
       </operator>
       <operator activated="true" class="jdbc_connectors:write_database" compatibility="10.5.000" expanded="true" height="82" name="Write Database" width="90" x="782" y="289">
