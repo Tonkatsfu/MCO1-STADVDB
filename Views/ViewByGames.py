@@ -31,3 +31,9 @@ def display_game_reports():
             5,
             age_filter
         )
+
+        gf.display_game_datas(
+            gf.fetch_games_required_age,
+            selected_category,
+            age_filter
+        )

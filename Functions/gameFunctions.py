@@ -36,6 +36,16 @@ def display_game_data(fetch_function, category, slider_label, default_value, age
     else:
         st.write("No games found.")
 
+def display_game_datas(fetch_function, category, age_filter):
+    data, fig = fetch_function(category, age_filter)
+
+    if not data.empty:
+        # Slider for the number of games to display
+        data, fig = fetch_function(category, age_filter)
+        st.plotly_chart(fig)  
+    else:
+        st.write("No games found.")
+
 def fetch_games_highest_peak_ccu(selected_category, top_n, age_fil):
     query = f"""
     SELECT 
@@ -123,3 +133,53 @@ def fetch_games_highest_playtime(selected_category, top_n, age_fil):
     )
 
     return highest_ave_playtime, fig
+
+def fetch_games_required_age(selected_category, age_fil, top_n=5):
+    query = f"""
+    SELECT 
+        `Required Age`, 
+        COUNT(`Required Age`) AS total_count
+    FROM dim_game
+    WHERE
+        FIND_IN_SET('{selected_category}', `categories`) > 0
+    """
+
+    if age_fil:
+        query += f" AND ({age_fil})"
+
+    query += """
+    GROUP BY 
+        `Required Age`
+    ORDER BY 
+        total_count DESC;
+    """
+
+    result = hf.execute_query(query)
+    df = pd.DataFrame(result, columns=['required_age', 'total_count'])
+    df['total_count'] = pd.to_numeric(df['total_count'], errors='coerce')
+    required_age_count = df.nlargest(top_n, 'total_count')
+
+    fig = px.bar(
+        required_age_count, 
+        x='required_age', 
+        y='total_count', 
+        title=f'Count of Games Grouped by Age Requirement',
+        labels={'required_age': 'Required Age', 'total_count': 'Game Count'},
+        text='total_count',  
+        color='required_age', 
+        barmode='group',  
+    )
+
+    fig.update_layout(
+        xaxis=dict(
+            tickmode='linear',  
+            dtick=1  
+        ),
+        xaxis_title='Required Age',
+        yaxis_title='Game Count',
+        xaxis_tickangle=0,  
+        template='plotly_white',  
+    )
+
+    return required_age_count, fig
+
