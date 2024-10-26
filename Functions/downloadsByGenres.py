@@ -2,6 +2,8 @@ import mysql.connector
 import pandas as pd
 import helperFunctions as hf
 
+import time
+
 def fetch_publishers():
     query = "SELECT `Publishers` FROM `dim_publisher`"
     conn = hf.create_connection()
@@ -27,16 +29,23 @@ def fetch_genres():
     return list(unique_genres)
 
 def fetch_total_games_by_publisher(selected_genre, top_n_publishers, roll_up=False):
+    start_time = time.time()  # Start the timer
+    # Create index if it doesn't exist
+    create_index_query = """
+    CREATE INDEX IF NOT EXISTS idx_appid ON dim_game (AppID);
+    """
+    hf.execute_query(create_index_query)  # Ensure index is created
+
     query = f"""
     SELECT 
-        p.`Publishers` AS `Publisher`, 
-        COUNT(g.`AppID`) AS `Total Games`
+        p.Publishers AS Publisher, 
+        COUNT(g.AppID) AS `Total Games`
     FROM 
         dim_game g
     JOIN 
-        fact_sales f ON g.`AppID` = f.`AppID`
+        fact_sales f ON g.AppID = f.AppID
     JOIN 
-        dim_publisher p ON f.`AppID` = p.`AppID`
+        dim_publisher p ON f.AppID = p.AppID
     """
 
     if selected_genre:
@@ -45,14 +54,14 @@ def fetch_total_games_by_publisher(selected_genre, top_n_publishers, roll_up=Fal
     if roll_up:
         query += f"""
         GROUP BY 
-            p.`Publishers`
+            p.Publishers
         ORDER BY 
             `Total Games` DESC
         """
     else:
         query += f"""
         GROUP BY 
-            p.`Publishers`, g.Genres
+            p.Publishers, g.Genres
         ORDER BY 
             `Total Games` DESC
         """
@@ -66,6 +75,10 @@ def fetch_total_games_by_publisher(selected_genre, top_n_publishers, roll_up=Fal
     conn.close()
 
     df = pd.DataFrame(result, columns=['Publisher', 'Total Games'])
+
+    end_time = time.time()  # End the timer
+    runtime = end_time - start_time  # Calculate the runtime
+    print(f"Runtime: {runtime:.4f} seconds")  # Print the runtime
     return df
 
 def fetch_total_recommendations_by_publisher(selected_genre, top_n_publishers):

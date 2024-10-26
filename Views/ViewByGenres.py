@@ -33,7 +33,7 @@ def display_genre_reports():
             st.write(f"No games found for the selected genre: {selected_genre}")
 
         top_n_publishers_recommendations = st.slider(
-            "Number of Recommendations per Publishers:",
+            "Number of Recommendations per Publisher:",
             min_value=1,
             max_value=20, 
             value=5,
@@ -47,4 +47,3 @@ def display_genre_reports():
             st.plotly_chart(fig_recommendations)
         else:
             st.write(f"No recommendations found for the selected genre: {selected_genre}")
-
